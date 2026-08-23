@@ -1,0 +1,17 @@
+# -----------------------------------------------------------------------
+# .gitattributes -- Composer / Packagist archive export rules
+#
+# Files and directories tagged export-ignore are excluded from the
+# dist ZIP that Packagist builds when a user runs:
+#   composer require magesetu/module-ai-base
+#
+# This keeps production installs lean (no tests, no dev docs, no CI).
+# -----------------------------------------------------------------------
+
+# Git housekeeping
+.gitattributes      export-ignore
+.gitignore          export-ignore
+.DS_Store           export-ignore
+
+# CI / CD configs (add more as you introduce them, e.g. GitHub Actions)
+/.github            export-ignore

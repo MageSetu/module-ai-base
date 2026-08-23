@@ -1,0 +1,31 @@
+{
+    "name": "magesetu/module-ai-base",
+    "description": "Base module for MageSetu Magento AI modules",
+    "type": "magento2-module",
+    "homepage": "https://github.com/MageSetu/module-ai-base",
+    "authors": [
+        {
+            "name": "MageSetu",
+            "homepage": "https://github.com/MageSetu"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/MageSetu/module-ai-base/issues",
+        "source": "https://github.com/MageSetu/module-ai-base"
+    },
+    "license": "Apache-2.0",
+    "version": "1.0.0",
+    "require": {
+        "php": ">=8.3",
+        "magento/framework": ">=2.4.8",
+        "magesetu/module-common": ">=1.0.0"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "MageSetu\\AiBase\\": ""
+        }
+    }
+}

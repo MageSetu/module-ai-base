@@ -1,0 +1,223 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright (c) 2026 MageSetu. All rights reserved.
+ *
+ * @package    MageSetu_AiBase
+ * @author     MageSetu
+ * @copyright  Copyright (c) 2026 MageSetu.
+ * @license    https://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
+ * @link       https://github.com/MageSetu/module-ai-base
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:MageSetu_AiBase:etc/ai_model_registry.xsd">
+
+    <!-- OpenAI -->
+    <provider code="openai" label="OpenAI">
+
+        <model name="gpt-5.5" label="gpt-5.5">
+            <type>chat</type>
+            <token_param>max_completion_tokens</token_param>
+            <supports_reasoning_effort>true</supports_reasoning_effort>
+            <default_reasoning_effort>medium</default_reasoning_effort>
+            <supports_verbosity>true</supports_verbosity>
+            <supports_temperature>false</supports_temperature>
+            <context_window>1050000</context_window>
+            <capabilities>
+                <capability>chat</capability>
+                <capability>reasoning</capability>
+            </capabilities>
+            <reasoning_effort_values>
+                <value>none</value>
+                <value>low</value>
+                <value>medium</value>
+                <value>high</value>
+                <value>xhigh</value>
+            </reasoning_effort_values>
+        </model>
+
+        <model name="gpt-5.4" label="gpt-5.4">
+            <type>chat</type>
+            <token_param>max_completion_tokens</token_param>
+            <supports_reasoning_effort>true</supports_reasoning_effort>
+            <default_reasoning_effort>none</default_reasoning_effort>
+            <supports_verbosity>true</supports_verbosity>
+            <supports_temperature>false</supports_temperature>
+            <context_window>1050000</context_window><!-- up to 1.05M with config; surcharge above 272K -->
+            <capabilities>
+                <capability>chat</capability>
+                <capability>reasoning</capability>
+            </capabilities>
+            <reasoning_effort_values>
+                <value>none</value>
+                <value>low</value>
+                <value>medium</value>
+                <value>high</value>
+                <value>xhigh</value>
+            </reasoning_effort_values>
+        </model>
+
+        <model name="gpt-5.4-mini" label="gpt-5.4-mini">
+            <type>chat</type>
+            <token_param>max_completion_tokens</token_param>
+            <supports_reasoning_effort>true</supports_reasoning_effort>
+            <default_reasoning_effort>none</default_reasoning_effort>
+            <supports_verbosity>true</supports_verbosity>
+            <supports_temperature>false</supports_temperature>
+            <context_window>400000</context_window>
+            <capabilities>
+                <capability>chat</capability>
+                <capability>reasoning</capability>
+            </capabilities>
+            <reasoning_effort_values>
+                <value>none</value>
+                <value>low</value>
+                <value>medium</value>
+                <value>high</value>
+                <value>xhigh</value>
+            </reasoning_effort_values>
+        </model>
+
+        <model name="gpt-5.4-nano" label="gpt-5.4-nano">
+            <type>chat</type>
+            <token_param>max_completion_tokens</token_param>
+            <supports_reasoning_effort>true</supports_reasoning_effort>
+            <default_reasoning_effort>none</default_reasoning_effort>
+            <supports_verbosity>true</supports_verbosity>
+            <supports_temperature>false</supports_temperature>
+            <context_window>400000</context_window>
+            <capabilities>
+                <capability>chat</capability>
+                <capability>reasoning</capability>
+            </capabilities>
+            <reasoning_effort_values>
+                <value>none</value>
+                <value>low</value>
+                <value>medium</value>
+                <value>high</value>
+                <value>xhigh</value>
+            </reasoning_effort_values>
+        </model>
+
+        <model name="gpt-5.2" label="gpt-5.2">
+            <type>chat</type>
+            <token_param>max_completion_tokens</token_param>
+            <supports_reasoning_effort>true</supports_reasoning_effort>
+            <default_reasoning_effort>none</default_reasoning_effort>
+            <supports_verbosity>true</supports_verbosity>
+            <supports_temperature>false</supports_temperature>
+            <context_window>400000</context_window>
+            <capabilities>
+                <capability>chat</capability>
+                <capability>reasoning</capability>
+            </capabilities>
+            <reasoning_effort_values>
+                <value>none</value>
+                <value>low</value>
+                <value>medium</value>
+                <value>high</value>
+                <value>xhigh</value>
+            </reasoning_effort_values>
+        </model>
+
+        <!-- context_window omitted: not confirmed -->
+        <model name="gpt-5.2-instant" label="gpt-5.2-instant">
+            <type>chat</type>
+            <token_param>max_completion_tokens</token_param>
+            <supports_reasoning_effort>false</supports_reasoning_effort>
+            <supports_verbosity>false</supports_verbosity>
+            <supports_temperature>true</supports_temperature>
+            <capabilities>
+                <capability>chat</capability>
+            </capabilities>
+        </model>
+
+        <!-- context_window omitted: not confirmed -->
+        <model name="gpt-4.1" label="gpt-4.1">
+            <type>chat</type>
+            <token_param>max_tokens</token_param>
+            <supports_reasoning_effort>false</supports_reasoning_effort>
+            <supports_verbosity>false</supports_verbosity>
+            <supports_temperature>true</supports_temperature>
+            <capabilities>
+                <capability>chat</capability>
+            </capabilities>
+        </model>
+
+        <!-- context_window omitted: not confirmed -->
+        <model name="gpt-4.1-mini" label="gpt-4.1-mini">
+            <type>chat</type>
+            <token_param>max_tokens</token_param>
+            <supports_reasoning_effort>false</supports_reasoning_effort>
+            <supports_verbosity>false</supports_verbosity>
+            <supports_temperature>true</supports_temperature>
+            <capabilities>
+                <capability>chat</capability>
+            </capabilities>
+        </model>
+
+        <model name="text-embedding-3-small" label="text-embedding-3-small (1536 Dimension)">
+            <type>embedding</type>
+            <supports_reasoning_effort>false</supports_reasoning_effort>
+            <supports_verbosity>false</supports_verbosity>
+            <supports_temperature>false</supports_temperature>
+            <context_window>8191</context_window><!-- max input tokens per request -->
+            <dimensions>1536</dimensions><!-- supports Matryoshka truncation via 'dimensions' param -->
+            <capabilities>
+                <capability>embedding</capability>
+            </capabilities>
+        </model>
+
+        <model name="text-embedding-3-large" label="text-embedding-3-large (3072 Dimensions)">
+            <type>embedding</type>
+            <supports_reasoning_effort>false</supports_reasoning_effort>
+            <supports_verbosity>false</supports_verbosity>
+            <supports_temperature>false</supports_temperature>
+            <context_window>8191</context_window>
+            <dimensions>3072</dimensions>
+            <capabilities>
+                <capability>embedding</capability>
+            </capabilities>
+        </model>
+
+    </provider>
+
+    <!-- Ollama -->
+    <provider code="ollama" label="Ollama">
+
+        <model name="qwen3.5:4b" label="qwen3.5:4b">
+            <type>chat</type>
+            <token_param>max_tokens</token_param>
+            <supports_reasoning_effort>true</supports_reasoning_effort>
+            <default_reasoning_effort>medium</default_reasoning_effort>
+            <supports_verbosity>true</supports_verbosity>
+            <supports_temperature>true</supports_temperature>
+            <context_window>128000</context_window>
+            <capabilities>
+                <capability>chat</capability>
+                <capability>reasoning</capability>
+            </capabilities>
+            <reasoning_effort_values>
+                <value>none</value>
+                <value>low</value>
+                <value>medium</value>
+                <value>high</value>
+            </reasoning_effort_values>
+        </model>
+
+        <model name="nomic-embed-text:latest" label="nomic-embed-text:latest (768 Dimensions)">
+            <type>embedding</type>
+            <supports_reasoning_effort>false</supports_reasoning_effort>
+            <supports_verbosity>false</supports_verbosity>
+            <supports_temperature>false</supports_temperature>
+            <context_window>8192</context_window><!-- large-context text encoder -->
+            <dimensions>768</dimensions><!-- Nomic's default embedding dimension size -->
+            <capabilities>
+                <capability>embedding</capability>
+            </capabilities>
+        </model>
+
+    </provider>
+
+</config>

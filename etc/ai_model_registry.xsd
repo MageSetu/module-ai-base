@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright (c) 2026 MageSetu. All rights reserved.
+ *
+ * @package    MageSetu_AiBase
+ * @author     MageSetu
+ * @copyright  Copyright (c) 2026 MageSetu.
+ * @license    https://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
+ * @link       https://github.com/MageSetu/module-ai-base
+ */
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <!--
+        Root element.
+        Contains one or more <provider> declarations.
+        Multiple modules may each ship an ai_model_registry.xml; Magento merges them
+        by the 'code' attribute on <provider> and the 'name' attribute on <model>.
+    -->
+    <xs:element name="config">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="provider" type="providerType" minOccurs="1" maxOccurs="unbounded" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!--
+        A single AI backend provider (e.g. "openai", "ollama").
+        code  - machine identifier used as the merge key and the registry lookup code.
+        label - human-readable name (optional; used for display purposes only).
+    -->
+    <xs:complexType name="providerType">
+        <xs:sequence>
+            <xs:element name="model" type="modelType" minOccurs="1" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="code" type="xs:string" use="required" />
+        <xs:attribute name="label" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <!--
+        A single model entry.
+        name  - the exact identifier sent to the provider API (e.g. "gpt-5.5", "qwen3.5:4b").
+                This is the merge key within a provider block.
+        label - human-readable label for admin dropdowns (optional; defaults to name when omitted).
+
+        All config fields are direct child elements (no intermediate wrapper).
+        xs:all allows any ordering of the child elements.
+    -->
+    <xs:complexType name="modelType">
+        <xs:all>
+            <!-- Required fields -->
+            <xs:element name="type" type="modelCategoryType" />
+            <xs:element name="supports_reasoning_effort" type="xs:boolean" />
+            <xs:element name="supports_verbosity" type="xs:boolean" />
+            <xs:element name="supports_temperature" type="xs:boolean" />
+            <xs:element name="capabilities" type="capabilitiesType" />
+
+            <!-- Optional fields — omit entirely when value is null/unknown -->
+            <xs:element name="token_param" type="xs:string" minOccurs="0" />
+            <xs:element name="default_reasoning_effort" type="xs:string" minOccurs="0" />
+            <xs:element name="context_window" type="xs:integer" minOccurs="0" />
+            <xs:element name="dimensions" type="xs:integer" minOccurs="0" />
+            <xs:element name="reasoning_effort_values" type="reasoningEffortValuesType" minOccurs="0" />
+        </xs:all>
+        <xs:attribute name="name" type="xs:string" use="required" />
+        <xs:attribute name="label" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <!--
+        Restricts <type> content to the two supported model categories.
+        Extend this enumeration if a new capability category is introduced.
+    -->
+    <xs:simpleType name="modelCategoryType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="chat" />
+            <xs:enumeration value="embedding" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!--
+        Container for one or more capability tags (e.g. "chat", "reasoning", "embedding").
+        At least one <capability> is required.
+    -->
+    <xs:complexType name="capabilitiesType">
+        <xs:sequence>
+            <xs:element name="capability" type="xs:string" minOccurs="1" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <!--
+        Container for the ordered list of valid reasoning-effort token values
+        (e.g. "none", "low", "medium", "high", "xhigh").
+        Omit this element entirely for models that do not support reasoning effort.
+    -->
+    <xs:complexType name="reasoningEffortValuesType">
+        <xs:sequence>
+            <xs:element name="value" type="xs:string" minOccurs="1" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>

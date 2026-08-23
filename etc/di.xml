@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright (c) 2026 MageSetu. All rights reserved.
+ *
+ * @package    MageSetu_AiBase
+ * @author     MageSetu
+ * @copyright  Copyright (c) 2026 MageSetu.
+ * @license    https://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
+ * @link       https://github.com/MageSetu/module-ai-base
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <!-- Preferences -->
+    <preference
+        for="MageSetu\AiBase\Api\AiClientPoolInterface"
+        type="MageSetu\AiBase\Model\Client\AiClientPool" />
+
+    <preference
+        for="MageSetu\AiBase\Api\Data\StructuredOutputInterface"
+        type="MageSetu\AiBase\Model\Data\StructuredOutput" />
+    <preference
+        for="MageSetu\AiBase\Api\Data\ModelRegistryConfigInterface"
+        type="MageSetu\AiBase\Model\Data\ModelRegistryConfig" />
+
+    <!-- Custom loggers -->
+    <virtualType name="MageSetu\AiBase\Logger\ErrorHandler" type="Magento\Framework\Logger\Handler\Base">
+        <arguments>
+            <argument name="fileName" xsi:type="string">/var/log/magesetu_ai_base.log</argument>
+            <argument name="loggerType" xsi:type="const">Monolog\Logger::ERROR</argument>
+        </arguments>
+    </virtualType>
+    <type name="MageSetu\AiBase\Logger\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">magesetu_ai_base</argument>
+            <argument name="handlers" xsi:type="array">
+                <item name="error" xsi:type="object">MageSetu\AiBase\Logger\ErrorHandler</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- HTTP client configurations -->
+    <virtualType name="AiBaseHttpClient" type="MageSetu\Common\Http\HttpClient">
+        <arguments>
+            <argument name="logger" xsi:type="object">MageSetu\AiBase\Logger\Logger</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- AiModelRegistry — XML config reader stack -->
+
+    <!-- 1. Wire the Reader with its fileName, Converter, and SchemaLocator -->
+    <type name="MageSetu\AiBase\Model\Config\Reader\AiModelRegistry">
+        <arguments>
+            <argument name="fileName" xsi:type="string">ai_model_registry.xml</argument>
+            <argument name="converter" xsi:type="object">MageSetu\AiBase\Model\Config\Converter\AiModelRegistry</argument>
+            <argument name="schemaLocator" xsi:type="object">MageSetu\AiBase\Model\Config\SchemaLocator\AiModelRegistry</argument>
+        </arguments>
+    </type>
+
+    <!-- 2. Wire the Data cache layer with its Reader and cache key -->
+    <type name="MageSetu\AiBase\Model\Config\Data\AiModelRegistry">
+        <arguments>
+            <argument name="reader"  xsi:type="object">MageSetu\AiBase\Model\Config\Reader\AiModelRegistry</argument>
+            <argument name="cacheId" xsi:type="string">ai_model_registry</argument>
+        </arguments>
+    </type>
+
+    <!-- 3. Provider virtual types retain their existing names for downstream consumers. -->
+    <virtualType
+        name="MageSetu\AiBase\Model\Client\ModelRegistry\OpenAiModelRegistry"
+        type="MageSetu\AiBase\Model\Client\ModelRegistry">
+        <arguments>
+            <argument name="providerCode" xsi:type="string">openai</argument>
+        </arguments>
+    </virtualType>
+    <virtualType
+        name="MageSetu\AiBase\Model\Client\ModelRegistry\OllamaModelRegistry"
+        type="MageSetu\AiBase\Model\Client\ModelRegistry">
+        <arguments>
+            <argument name="providerCode" xsi:type="string">ollama</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Ai client configurations -->
+    <virtualType
+        name="MageSetu\AiBase\Model\Config\Source\OllamaChatModel"
+        type="MageSetu\AiBase\Model\Config\Source\ChatModel">
+            <arguments>
+                <argument name="registry" xsi:type="object">MageSetu\AiBase\Model\Client\ModelRegistry\OllamaModelRegistry</argument>
+            </arguments>
+    </virtualType>
+    <virtualType
+        name="MageSetu\AiBase\Model\Config\Source\OpenAiChatModel"
+        type="MageSetu\AiBase\Model\Config\Source\ChatModel">
+            <arguments>
+                <argument name="registry" xsi:type="object">MageSetu\AiBase\Model\Client\ModelRegistry\OpenAiModelRegistry</argument>
+            </arguments>
+    </virtualType>
+    <virtualType
+        name="MageSetu\AiBase\Model\Config\Source\OllamaEmbeddingModel"
+        type="MageSetu\AiBase\Model\Config\Source\EmbeddingModel">
+            <arguments>
+                <argument name="registry" xsi:type="object">MageSetu\AiBase\Model\Client\ModelRegistry\OllamaModelRegistry</argument>
+            </arguments>
+    </virtualType>
+    <virtualType
+        name="MageSetu\AiBase\Model\Config\Source\OpenAiEmbeddingModel"
+        type="MageSetu\AiBase\Model\Config\Source\EmbeddingModel">
+            <arguments>
+                <argument name="registry" xsi:type="object">MageSetu\AiBase\Model\Client\ModelRegistry\OpenAiModelRegistry</argument>
+            </arguments>
+    </virtualType>
+    <type name="MageSetu\AiBase\Model\Client\Embedding\OllamaEmbeddingClient">
+        <arguments>
+            <argument name="http" xsi:type="object">AiBaseHttpClient</argument>
+            <argument name="modelRegistry" xsi:type="object">MageSetu\AiBase\Model\Client\ModelRegistry\OllamaModelRegistry</argument>
+        </arguments>
+    </type>
+    <type name="MageSetu\AiBase\Model\Client\Embedding\OpenAiEmbeddingClient">
+        <arguments>
+            <argument name="http" xsi:type="object">AiBaseHttpClient</argument>
+            <argument name="modelRegistry" xsi:type="object">MageSetu\AiBase\Model\Client\ModelRegistry\OpenAiModelRegistry</argument>
+        </arguments>
+    </type>
+    <type name="MageSetu\AiBase\Model\Client\Chat\OllamaChatClient">
+        <arguments>
+            <argument name="http" xsi:type="object">AiBaseHttpClient</argument>
+            <argument name="modelRegistry" xsi:type="object">MageSetu\AiBase\Model\Client\ModelRegistry\OllamaModelRegistry</argument>
+        </arguments>
+    </type>
+    <type name="MageSetu\AiBase\Model\Client\Chat\OpenAiChatClient">
+        <arguments>
+            <argument name="http" xsi:type="object">AiBaseHttpClient</argument>
+            <argument name="modelRegistry" xsi:type="object">MageSetu\AiBase\Model\Client\ModelRegistry\OpenAiModelRegistry</argument>
+        </arguments>
+    </type>
+
+</config>
